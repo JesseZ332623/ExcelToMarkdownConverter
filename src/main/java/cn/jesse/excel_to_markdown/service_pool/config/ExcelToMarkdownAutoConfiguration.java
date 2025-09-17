@@ -20,13 +20,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(ExcelToMarkdownProperties.class)
 public class ExcelToMarkdownAutoConfiguration
 {
-    public ExcelToMarkdownAutoConfiguration()
-    {
-        System.out.println(
-            "Construct instants of class ExcelToMarkdownAutoConfiguration..."
-        );
-    }
-
     /**
      * 按照 {@link ExcelToMarkdownProperties} 提供的配置，自动创建转换服务。
      */
