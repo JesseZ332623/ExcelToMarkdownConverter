@@ -1,6 +1,7 @@
 package cn.jesse.excel_to_markdown.service_pool.impl;
 
 import cn.jesse.excel_to_markdown.service_pool.ConvertServicePoolManager;
+import cn.jesse.excel_to_markdown.service_pool.exception.CachedScriptCreateFailed;
 import cn.jesse.excel_to_markdown.service_pool.exception.NotSupportFileExtension;
 import cn.jesse.excel_to_markdown.service_pool.exception.ScriptWorkerException;
 import cn.jesse.excel_to_markdown.service_pool.utils.CachedScriptCreator;
@@ -125,10 +126,10 @@ public class DefaultConvertServicePoolManager
                 this.pythonProcess
                     = processBuilder.start();
             }
-            catch (IOException exception)
+            catch (IOException | CachedScriptCreateFailed exception)
             {
                 throw new
-                    ScriptWorkerException(
+                ScriptWorkerException(
                     String.format(
                         "Start Python Service failed, Caused by：%s",
                         exception.getMessage()),
