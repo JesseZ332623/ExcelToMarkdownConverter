@@ -3,7 +3,7 @@
 ## 简介
 
 在工作中遇到了需要处理 Excel 表转换成 Markdown 文本的业务，
-最先我是简单的调用 [markitdown](https://github.com/microsoft/markitdown) 开源库，后来很快遇到了性能瓶颈，
+最开始我简单的调用了 [markitdown](https://github.com/microsoft/markitdown) 开源库，但很快遇到了性能瓶颈，
 后边我将转换操作服务化 + 池化，应用运行时多个转换服务常驻于后台，在解决性能瓶颈的同时大幅提升吞吐量，
 如果项目中 Excel 表转 Markdown 是核心业务，可以考虑试试这个中间件。🚀🚀🚀
 
