@@ -20,6 +20,9 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(ExcelToMarkdownProperties.class)
 public class ExcelToMarkdownAutoConfiguration
 {
+    /** 最大服务进程数限制。*/
+    final static int MAX_PROCESS = 32;
+
     /**
      * 按照 {@link ExcelToMarkdownProperties} 提供的配置，自动创建转换服务。
      */
@@ -29,6 +32,10 @@ public class ExcelToMarkdownAutoConfiguration
     convertServicePoolManager(@NotNull ExcelToMarkdownProperties properties)
     {
         return new
-        DefaultConvertServicePoolManager(properties.getProcesses());
+        DefaultConvertServicePoolManager(
+            Math.min(properties.getProcesses(), MAX_PROCESS),
+            properties.getDestroy().getMaxWaitSeconds(),
+            properties.getDestroy().getWaitIntervalMillis()
+        );
     }
 }
