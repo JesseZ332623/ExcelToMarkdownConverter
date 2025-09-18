@@ -1,6 +1,6 @@
-package cn.jesse.excel_to_markdown.service_pool.utils;
+package io.github.jessez332623.excel_to_markdown.utils;
 
-import cn.jesse.excel_to_markdown.service_pool.exception.NotSupportFileExtension;
+import io.github.jessez332623.excel_to_markdown.exception.NotSupportFileExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
