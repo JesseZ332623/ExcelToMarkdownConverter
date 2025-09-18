@@ -1,6 +1,7 @@
 package cn.jesse.excel_to_markdown.service_pool.utils;
 
 import cn.jesse.excel_to_markdown.service_pool.exception.NotSupportFileExtension;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.Set;
@@ -18,16 +19,10 @@ public class FileExtensionChecker
         return (string != null) && !(string.trim().isEmpty());
     }
 
-    /** 执行检查 */
-    public static void
-    check(String fileName)
+    /** 提取文件扩展名。*/
+    public static @NotNull String
+    extractFileExtension(@NotNull String fileName)
     {
-        if(!isNotEmptyString(fileName))
-        {
-            throw new
-            NotSupportFileExtension("File name is null or empty!");
-        }
-
         int dotIndex = fileName.lastIndexOf('.');
 
         if (dotIndex == -1)
@@ -38,9 +33,23 @@ public class FileExtensionChecker
             );
         }
 
+        return
+        fileName.substring(dotIndex)
+                .toLowerCase(Locale.ROOT);
+    }
+
+    /** 执行检查 */
+    public static void
+    check(String fileName)
+    {
+        if(!isNotEmptyString(fileName))
+        {
+            throw new
+            NotSupportFileExtension("File name is null or empty!");
+        }
+
         final String extension
-            = fileName.substring(dotIndex)
-                      .toLowerCase(Locale.ROOT);
+            = extractFileExtension(fileName);
 
         if (!SUPPORT_FILE_EXTENSION.contains(extension))
         {
