@@ -11,9 +11,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /** Excel 表格转 Markdown Python 服务池管理器默认实现。*/
 @Slf4j
@@ -33,11 +34,21 @@ public class DefaultConvertServicePoolManager
     private static final String
     SCRIPT_CLASSPATH = "/py-scripts/table_converter_service.py";
 
-    /** 最大服务进程数量（默认是 4 个） */
+    /** 最大服务进程数量（默认是 4 个）*/
     private int MAX_SERVICE_AMOUNT;
+
+    /** 销毁服务池时，最多给池中的服务多少时间去处理完手头的任务？（默认 15 秒）*/
+    private int DESTROY_MAX_WAIT_SECONDS;
+
+    /** 销毁服务池时，每隔多久去检查池中服务的状态？（默认 500 毫秒）*/
+    private int DESTROY_WAIT_INTERVAL_MILLIS;
 
     /** 池子是否正在关闭中？*/
     private volatile boolean isShuttingDown = false;
+
+    /** 正在处理任务的进程数量 */
+    private final
+    AtomicInteger activeWorkerCount = new AtomicInteger(0);
 
     /** 所有工作进程的列表，用于关闭时清理 */
     private List<ScriptWorker> allWorkers;
@@ -48,9 +59,15 @@ public class DefaultConvertServicePoolManager
     idleWorkerQueue = new LinkedBlockingDeque<>();
 
     public DefaultConvertServicePoolManager(
-        @Value("${app.excel_to_markdown.processCount:8}")
-        int maxService)
-    { this.MAX_SERVICE_AMOUNT = maxService; }
+        int maxService,
+        int destroyMaxWaitSeconds,
+        int destroyWaitIntervalMillis
+    )
+    {
+        this.MAX_SERVICE_AMOUNT           = maxService;
+        this.DESTROY_MAX_WAIT_SECONDS     = destroyMaxWaitSeconds;
+        this.DESTROY_WAIT_INTERVAL_MILLIS = destroyWaitIntervalMillis;
+    }
 
     /** 单个服务的抽象 */
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -87,7 +104,7 @@ public class DefaultConvertServicePoolManager
         /** 检查本服务是否正在运行。*/
         public boolean
         isNotAlive() {
-            return this.pythonProcess == null || !this.pythonProcess.isAlive();
+            return Objects.isNull(this.pythonProcess) || !this.pythonProcess.isAlive();
         }
 
         /** 获取服务的 PID（如果服务进程不存在返回 -1）。*/
@@ -107,7 +124,7 @@ public class DefaultConvertServicePoolManager
         initWorker()
         {
             // 检查是否已经启动，是则直接返回
-            if (this.pythonProcess != null && this.pythonProcess.isAlive()) {
+            if (Objects.nonNull(this.pythonProcess) && this.pythonProcess.isAlive()) {
                 return;
             }
 
@@ -201,7 +218,7 @@ public class DefaultConvertServicePoolManager
                 }
             }
 
-            if (this.pythonProcess != null && !isGracefulShutDown)
+            if (Objects.nonNull(this.pythonProcess) && !isGracefulShutDown)
             {
                 try
                 {
@@ -343,8 +360,7 @@ public class DefaultConvertServicePoolManager
                 worker.initWorker();
 
                 tempAllWorkers.add(worker);
-                boolean isOffered
-                    = this.idleWorkerQueue.offer(worker);
+                this.idleWorkerQueue.offer(worker);
             }
             catch (ScriptWorkerException e)
             {
@@ -369,9 +385,11 @@ public class DefaultConvertServicePoolManager
     @Override
     public void destroy()
     {
-        isShuttingDown = true;
+        this.isShuttingDown = true;
 
         log.info("Starting to close all Python service ...");
+
+        this.waitingToFinish();
 
         int closedCount = 0;
 
@@ -403,14 +421,78 @@ public class DefaultConvertServicePoolManager
         );
     }
 
+    /**
+     * 作为 waitingToFinish() 的辅助方法，在等待时间范围内，
+     * 每隔一小段时间检查池中的服务是否都已经完成了手头的任务。
+     *
+     * @param startTime      开始时间戳
+     *
+     * @return 在本轮检查中，池中的所有任务是否都处于空闲状态？  <br/>
+     *         true  当前仍有服务在处理任务，需要进行下一轮检查  <br/>
+     *         false 当前所有任务都已空闲
+     */
+    private boolean
+    isCompletelyFinish(final long startTime)
+    {
+        return
+        this.activeWorkerCount.get() > 0 &&
+        ((System.currentTimeMillis() - startTime) < DESTROY_MAX_WAIT_SECONDS * 1000L);
+    }
+
+    /** 在关闭服务池前，先等待所有服务处理完手头的任务。*/
+    private void waitingToFinish()
+    {
+        final long startTime = System.currentTimeMillis();
+
+        while (this.isCompletelyFinish(startTime))
+        {
+            try {
+                Thread.sleep(DESTROY_WAIT_INTERVAL_MILLIS);
+            }
+            catch (InterruptedException exception)
+            {
+                Thread.currentThread().interrupt();
+
+                log.warn("Interrupted while waiting for workers to finish.");
+                break;
+            }
+        }
+
+        /*
+         * 若在 maxWaitSeconds 之后还有服务繁忙（这种情况少见），
+         * 只得强制关闭了。
+         */
+        if (this.activeWorkerCount.get() > 0)
+        {
+            log.warn(
+                "Still have {} active workers after waiting for {} seconds, forcing shutdown.",
+                this.activeWorkerCount.get(), DESTROY_MAX_WAIT_SECONDS
+            );
+        }
+    }
+
     /** 轮询池中可用服务并返回。*/
-    private ScriptWorker
+    private @Nullable ScriptWorker
     pollService() throws InterruptedException
     {
+        if (this.isShuttingDown)
+        {
+            log.warn("Service pool is shutting down, cannot acquire new worker.");
+            return null;
+        }
+
         // 调用线程阻塞指定时间，
         // 尝试从阻塞队列里面获取空闲的服务，超时则返回 null
-        return
-        this.idleWorkerQueue.poll(30, TimeUnit.SECONDS);
+        ScriptWorker worker
+            = this.idleWorkerQueue
+                  .poll(5L, TimeUnit.SECONDS);
+
+        if (Objects.nonNull(worker)) {
+            // 成功分配到服务，活跃计数 + 1
+            this.activeWorkerCount.incrementAndGet();
+        }
+
+        return worker;
     }
 
     /**
@@ -432,8 +514,10 @@ public class DefaultConvertServicePoolManager
             }
         }
 
-        boolean isOffered
-            = this.idleWorkerQueue.offer(worker);
+        this.idleWorkerQueue.offer(worker);
+
+        // 归还服务入池，活跃计数 - 1
+        this.activeWorkerCount.decrementAndGet();
     }
 
     /**
@@ -449,7 +533,7 @@ public class DefaultConvertServicePoolManager
     public String
     convertTableToMarkdown(String tablePath)
     {
-        if (isShuttingDown)
+        if (this.isShuttingDown)
         {
             log.warn("The service shutting down, refuse new request!");
             return null;
