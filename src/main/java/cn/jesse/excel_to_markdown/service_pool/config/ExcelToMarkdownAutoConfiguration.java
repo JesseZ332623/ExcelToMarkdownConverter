@@ -29,6 +29,6 @@ public class ExcelToMarkdownAutoConfiguration
     convertServicePoolManager(@NotNull ExcelToMarkdownProperties properties)
     {
         return new
-        DefaultConvertServicePoolManager(properties.getProcessCount());
+        DefaultConvertServicePoolManager(properties.getProcesses());
     }
 }
