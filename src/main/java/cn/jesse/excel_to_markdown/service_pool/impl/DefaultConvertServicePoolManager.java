@@ -89,16 +89,16 @@ public class DefaultConvertServicePoolManager
         private static final String EXCEPTION_MARK
             = "exception";
 
-        /** 服务进程本体。*/
+        /** 服务进程本体 */
         private Process pythonProcess;
 
-        /** 与进程的标准输入进行通信的缓冲区。*/
+        /** 与进程的标准输入进行通信的缓冲区 */
         private BufferedWriter pythonWriter;
 
-        /** 与进程的标准输出进行通信的缓冲区。*/
+        /** 与进程的标准输出进行通信的缓冲区 */
         private BufferedReader pythonReader;
 
-        /** 与进程的标准错误进行通信的缓冲区。*/
+        /** 与进程的标准错误进行通信的缓冲区 */
         private BufferedReader pythonErrorReader;
 
         /** 检查本服务是否正在运行。*/
@@ -107,7 +107,7 @@ public class DefaultConvertServicePoolManager
             return Objects.isNull(this.pythonProcess) || !this.pythonProcess.isAlive();
         }
 
-        /** 获取服务的 PID（如果服务进程不存在返回 -1）。*/
+        /** 获取服务的 PID（如果服务进程不存在则返回 -1）。*/
         public long
         getPID()
         {
