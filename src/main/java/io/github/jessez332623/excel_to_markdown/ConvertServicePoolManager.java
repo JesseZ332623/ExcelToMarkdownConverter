@@ -1,6 +1,6 @@
-package cn.jesse.excel_to_markdown.service_pool;
+package io.github.jessez332623.excel_to_markdown;
 
-import cn.jesse.excel_to_markdown.service_pool.exception.ScriptWorkerException;
+import io.github.jessez332623.excel_to_markdown.exception.ScriptWorkerException;
 
 /** Excel 表格转 Markdown Python 服务池管理器接口。*/
 public interface ConvertServicePoolManager
