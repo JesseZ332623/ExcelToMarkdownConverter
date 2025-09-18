@@ -535,7 +535,7 @@ public class DefaultConvertServicePoolManager
     {
         if (this.isShuttingDown)
         {
-            log.warn("The service shutting down, refuse new request!");
+            log.warn("Service shutdown in progress - rejecting new request!");
             return null;
         }
 
@@ -566,7 +566,7 @@ public class DefaultConvertServicePoolManager
         {
             log.error("Exception occurred during communication with python process!", exception);
 
-            if (!Objects.isNull(worker))
+            if (Objects.nonNull(worker))
             {
                 try { worker.restart(); }
                 catch (InterruptedException restartException) {
@@ -585,7 +585,7 @@ public class DefaultConvertServicePoolManager
         finally
         {
             // 不论失败与否，这个服务实例都要回到阻塞队列
-            if (!Objects.isNull(worker)) {
+            if (Objects.nonNull(worker)) {
                 this.returnWorker(worker);
             }
         }
