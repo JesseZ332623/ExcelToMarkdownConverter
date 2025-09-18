@@ -2,64 +2,111 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
 	<groupId>cn.jesse</groupId>
 	<artifactId>excel_to_markdown</artifactId>
     <packaging>jar</packaging>
 	<version>1.0.0</version>
 	<name>excel_to_markdown</name>
 	<description>Excel 表格文件转 Markdown 服务池</description>
-	<url/>
+    <url>https://github.com/JesseZ332623/ExcelToMarkdownConverter</url>
 	<licenses>
-		<license/>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>https://github.com/JesseZ332623/ExcelToMarkdownConverter/blob/main/LICENSE</url>
+        </license>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+            <name>JesseZ332623</name>
+            <email>zhj3191955858@gmail.com</email>
+        </developer>
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+        <connection>
+            scm:git:https://github.com/JesseZ332623/ExcelToMarkdownConverter.git
+        </connection>
+        <developerConnection>
+            scm:git:https://github.com/JesseZ332623/ExcelToMarkdownConverter.git
+        </developerConnection>
+        <url>https://github.com/JesseZ332623/ExcelToMarkdownConverter</url>
+        <tag>HEAD</tag>
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+        <spring-boot.version>3.5.3</spring-boot.version>
 	</properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 	<dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>3.5.3</version>
-            <scope>compile</scope>
         </dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>24.0.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 生成Javadoc JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+                            <version>1.18.36</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
