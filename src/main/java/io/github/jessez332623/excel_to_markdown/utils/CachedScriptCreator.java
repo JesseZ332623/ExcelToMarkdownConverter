@@ -1,6 +1,6 @@
-package cn.jesse.excel_to_markdown.service_pool.utils;
+package io.github.jessez332623.excel_to_markdown.utils;
 
-import cn.jesse.excel_to_markdown.service_pool.exception.CachedScriptCreateFailed;
+import io.github.jessez332623.excel_to_markdown.exception.CachedScriptCreateFailed;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
