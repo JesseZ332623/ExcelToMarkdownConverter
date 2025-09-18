@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * 依赖 Spring 自动配置属性类。
+ * Spring 依赖自动配置属性类。
  *
  * <p>用法：</p>
  * <ol>
@@ -14,7 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *         来启用本转换服务
  *     </li>
  *     <li>
- *         使用 app.excel-to-markdown.process-count=?
+ *         使用 app.excel-to-markdown.processes=?
  *         来控制服务进程的数量
  *     </li>
  * </ol>
@@ -27,5 +27,5 @@ public class ExcelToMarkdownProperties
     private boolean enabled = false;
 
     /** 服务最大进程数是？（默认为 4）*/
-    private int processCount = 4;
+    private int processes = 4;
 }
