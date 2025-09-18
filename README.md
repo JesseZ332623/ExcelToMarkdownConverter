@@ -9,6 +9,18 @@
 
 ### 用法
 
+当前该依赖已经发布至 Maven 的中央仓库，
+可以访问：[Excel 表格文件转 Markdown 服务池](https://central.sonatype.com/artifact/io.github.jessez332623/excel_to_markdown) 
+也可以在 `pom.xml` 中直接配置：
+
+```xml
+<dependency>
+    <groupId>io.github.jessez332623</groupId>
+    <artifactId>excel_to_markdown</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 在安装好依赖后，可以项目的配置文件中（如 `application.properties` 或 `application.yml`）中启用本服务池，
 示例如下：
 
