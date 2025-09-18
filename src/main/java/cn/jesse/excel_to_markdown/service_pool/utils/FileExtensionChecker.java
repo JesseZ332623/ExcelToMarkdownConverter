@@ -10,11 +10,11 @@ import java.util.Set;
 public class FileExtensionChecker
 {
     /** 支持进行转换的文件扩展名集合。*/
-    private static final Set<String>
+    public static final Set<String>
     SUPPORT_FILE_EXTENSION = Set.of(".xlsx", ".xlsm", ".xlsb", ".xls", ".csv");
 
     /** 检查某个字符串是否为空串。*/
-    private static boolean
+    public static boolean
     isNotEmptyString(String string) {
         return (string != null) && !(string.trim().isEmpty());
     }
