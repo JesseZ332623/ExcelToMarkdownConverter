@@ -1,4 +1,4 @@
-package cn.jesse.excel_to_markdown.service_pool.config;
+package io.github.jessez332623.excel_to_markdown.config;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
