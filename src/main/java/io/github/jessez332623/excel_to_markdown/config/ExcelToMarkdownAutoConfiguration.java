@@ -1,7 +1,7 @@
-package cn.jesse.excel_to_markdown.service_pool.config;
+package io.github.jessez332623.excel_to_markdown.config;
 
-import cn.jesse.excel_to_markdown.service_pool.ConvertServicePoolManager;
-import cn.jesse.excel_to_markdown.service_pool.impl.DefaultConvertServicePoolManager;
+import io.github.jessez332623.excel_to_markdown.ConvertServicePoolManager;
+import io.github.jessez332623.excel_to_markdown.impl.DefaultConvertServicePoolManager;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
