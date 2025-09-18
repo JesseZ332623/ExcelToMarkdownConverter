@@ -30,9 +30,9 @@ app.excel-to-markdown.destroy.wait-interval-millis=500
 
 [Excel 表格 -> Markdown Python 服务脚本](https://github.com/JesseZ332623/ExcelToMarkdownConverter/blob/main/src/main/resources/py-scripts/table_converter_service.py)
 
-[Excel 表格 -> Markdown Python 服务池管理器默认实现](https://github.com/JesseZ332623/ExcelToMarkdownConverter/blob/main/src/main/java/cn/jesse/excel_to_markdown/service_pool/impl/DefaultConvertServicePoolManager.java)
+[Excel 表格 -> Markdown Python 服务池管理器默认实现](https://github.com/JesseZ332623/ExcelToMarkdownConverter/blob/main/src/main/java/io/github/jessez332623/excel_to_markdown/impl/DefaultConvertServicePoolManager.java)
 
-[缓存服务脚本创建器](https://github.com/JesseZ332623/ExcelToMarkdownConverter/blob/main/src/main/java/cn/jesse/excel_to_markdown/service_pool/utils/CachedScriptCreator.java)
+[缓存服务脚本创建器](https://github.com/JesseZ332623/ExcelToMarkdownConverter/blob/main/src/main/java/io/github/jessez332623/excel_to_markdown/utils/CachedScriptCreator.java)
 
 ### LICENCE
 
