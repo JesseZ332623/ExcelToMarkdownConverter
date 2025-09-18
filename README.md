@@ -16,8 +16,14 @@
 # 启动本服务
 app.excel-to-markdown.enabled=true
 
-# 后台常驻 8 个 Python 服务进程处理转换操作
+#（可选）后台常驻 8 个 Python 服务进程处理转换操作
 app.excel-to-markdown.processCount=8
+
+#（可选）最多给池中的服务 10 秒的时间处理完手头的任务
+app.excel-to-markdown.destroy.max-wait-seconds=10
+
+#（可选）每隔 500 毫秒去检查池中服务的状态
+app.excel-to-markdown.destroy.wait-interval-millis=500
 ```
 
 ### 代码速览
@@ -34,4 +40,4 @@ app.excel-to-markdown.processCount=8
 
 ### Latest Update
 
-*2025.09.17*
+*2025.09.18*
