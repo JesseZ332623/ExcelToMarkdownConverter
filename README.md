@@ -13,11 +13,15 @@
 可以访问：[Excel 表格文件转 Markdown 服务池](https://central.sonatype.com/artifact/io.github.jessez332623/excel_to_markdown) 
 也可以在 `pom.xml` 中直接配置：
 
+#### 📢 重要通知
+
+不要使用 1.0.0 版本，该版本存在配置错误！（恼）
+
 ```xml
 <dependency>
     <groupId>io.github.jessez332623</groupId>
     <artifactId>excel_to_markdown</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
