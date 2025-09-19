@@ -57,4 +57,4 @@ app.excel-to-markdown.destroy.wait-interval-millis=500
 
 ### Latest Update
 
-*2025.09.18*
+*2025.09.19*
