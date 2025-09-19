@@ -1,4 +1,4 @@
-package io.github.jessez332623.excel_to_markdown.config;
+package io.github.jessez332623.excel_to_markdown.autoconfigure;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
