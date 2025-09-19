@@ -5,7 +5,7 @@
 	<groupId>io.github.jessez332623</groupId>
 	<artifactId>excel_to_markdown</artifactId>
     <packaging>jar</packaging>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>excel_to_markdown</name>
 	<description>Excel 表格文件转 Markdown 服务池</description>
     <url>https://github.com/JesseZ332623/ExcelToMarkdownConverter</url>
