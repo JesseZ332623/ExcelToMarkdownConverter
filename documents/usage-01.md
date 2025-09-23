@@ -31,9 +31,6 @@ public class SysFileServiceImpl implements ISysFileService
         // 获取客户端传来文件的原始文件名（比如：document.pdf test.txt）
         String fileName = Objects.requireNonNull(file.getOriginalFilename());
 
-        // 记录开始上传文件的时间戳
-        long start = System.currentTimeMillis();
-
         /* 文件会被上传到远程存储服务器，这里保存文件在存储服务器的 URL */
         String fileUrl;
 
