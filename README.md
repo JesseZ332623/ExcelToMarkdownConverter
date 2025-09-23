@@ -29,19 +29,24 @@
 示例如下：
 
 ```properties
-# 启动本服务
+# 启动本服务（默认为 false）
 app.excel-to-markdown.enabled=true
 
-#（可选）后台常驻 8 个 Python 服务进程处理转换操作
+#（可选）后台常驻 8 个 Python 服务进程处理转换操作（默认为 4）
 app.excel-to-markdown.processCount=8
 
-#（可选）在关闭服务池时，最多给池中的服务 10 秒的时间处理完手头的任务
+#（可选）在关闭服务池时，
+# 最多给池中的服务 10 秒的时间处理完手头的任务（默认为 15 秒）
 app.excel-to-markdown.destroy.max-wait-seconds=10
 
 #（可选）在关闭服务池时，每隔 500 毫秒去检查池中服务的状态，
-# 看看服务们是否已经处理完了手头的任务
+# 看看服务们是否已经处理完了手头的任务（默认为 500 毫秒）
 app.excel-to-markdown.destroy.wait-interval-millis=500
 ```
+
+### 测试用例
+
+详见：[01-读取文件上传转换成 Markdown 后再上传](https://github.com/JesseZ332623/ExcelToMarkdownConverter/blob/main/documents/usage-01.md)
 
 ### 代码速览
 
