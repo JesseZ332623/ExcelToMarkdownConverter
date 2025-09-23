@@ -22,7 +22,7 @@ public class SysFileServiceImpl implements ISysFileService
     private OssTemplate ossTemplate;
 
     @Autowired
-    private ScriptServicePoolManager scriptServicePoolManager;
+    private ConvertServicePoolManager scriptServicePoolManager;
     
     @Override
     public UploadResult
