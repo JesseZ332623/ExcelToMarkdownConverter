@@ -15,17 +15,19 @@
 
 #### 📢 重要通知
 
-不要使用 1.0.0 版本，该版本存在配置错误！（恼）
+1.0.5 版本完成了模块化迁移和一些细节上的优化，建议使用新版本。
 
 ```xml
 <dependency>
     <groupId>io.github.jessez332623</groupId>
     <artifactId>excel_to_markdown</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 
-在安装好依赖后，可以项目的配置文件中（如 `application.properties` 或 `application.yml`）中启用本服务池，
+### 属性配置
+
+在安装好依赖后，可以项目的配置文件中（这里演示 `application.properties`）中启用本服务池，
 示例如下：
 
 ```properties
@@ -33,7 +35,7 @@
 app.excel-to-markdown.enabled=true
 
 #（可选）后台常驻 8 个 Python 服务进程处理转换操作（默认为 4）
-app.excel-to-markdown.processCount=8
+app.excel-to-markdown.processes=8
 
 #（可选）在关闭服务池时，
 # 最多给池中的服务 10 秒的时间处理完手头的任务（默认为 15 秒）
@@ -43,10 +45,6 @@ app.excel-to-markdown.destroy.max-wait-seconds=10
 # 看看服务们是否已经处理完了手头的任务（默认为 500 毫秒）
 app.excel-to-markdown.destroy.wait-interval-millis=500
 ```
-
-### 测试用例
-
-详见：[01-读取文件上传转换成 Markdown 后再上传](https://github.com/JesseZ332623/ExcelToMarkdownConverter/blob/main/documents/usage-01.md)
 
 ### 代码速览
 
@@ -62,4 +60,4 @@ app.excel-to-markdown.destroy.wait-interval-millis=500
 
 ### Latest Update
 
-*2025.09.19*
+*2025.09.29*
