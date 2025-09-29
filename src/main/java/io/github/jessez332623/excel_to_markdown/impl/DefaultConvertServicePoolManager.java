@@ -3,7 +3,7 @@ package io.github.jessez332623.excel_to_markdown.impl;
 import io.github.jessez332623.excel_to_markdown.ConvertServicePoolManager;
 import io.github.jessez332623.excel_to_markdown.exception.CachedScriptCreateFailed;
 import io.github.jessez332623.excel_to_markdown.exception.NotSupportFileExtension;
-import io.github.jessez332623.excel_to_markdown.exception.ScriptWorkerException;
+import io.github.jessez332623.excel_to_markdown.exception.exports.ScriptWorkerException;
 import io.github.jessez332623.excel_to_markdown.utils.CachedScriptCreator;
 import io.github.jessez332623.excel_to_markdown.utils.FileExtensionChecker;
 import jakarta.annotation.PostConstruct;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.DisposableBean;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -270,7 +271,7 @@ public class DefaultConvertServicePoolManager
         /**
          * 向服务提交任务。
          *
-         * @param tablePath 表格临时文件路径
+         * @param tablePath 表格文件路径
          */
         public void
         submit(String tablePath)
@@ -531,7 +532,7 @@ public class DefaultConvertServicePoolManager
      */
     @Override
     public String
-    convertTableToMarkdown(String tablePath)
+    convertTableToMarkdown(Path tablePath) throws ScriptWorkerException
     {
         if (this.isShuttingDown)
         {
@@ -543,6 +544,20 @@ public class DefaultConvertServicePoolManager
 
         try
         {
+            final Path tableAbsolutePath
+                = tablePath.toAbsolutePath().normalize();
+
+            if (!Files.exists(tableAbsolutePath))
+            {
+                throw new
+                    ScriptWorkerException(
+                    String.format(
+                        "Table which from %s is not exist...",
+                        tableAbsolutePath
+                    )
+                );
+            }
+
             worker = this.pollService();
 
             if (Objects.isNull(worker))
@@ -551,7 +566,7 @@ public class DefaultConvertServicePoolManager
                 ScriptWorkerException("All service busy! Please try again later...");
             }
 
-            worker.submit(tablePath.trim());
+            worker.submit(tableAbsolutePath.toString());
             final String convertMarkdown = worker.getResult();
             worker.checkError();
 
